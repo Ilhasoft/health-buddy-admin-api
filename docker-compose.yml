@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    container_name: db
+    ports:
+      - "5432:5432"
+    environment:
+      - DB_NAME=${DB_NAME:-healthbuddy}
+      - DB_USER=${DB_USER:-ilha_healthbuddy}
+      - DB_PASSWORD=${DB_PASSWORD:-ilha102030}
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    environment:
+      - DEBUG=${DEBUG:-true}
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    links:
+      - db
+    depends_on:
+      - db
