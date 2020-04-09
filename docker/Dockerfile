@@ -10,9 +10,9 @@ RUN apt-get install -y supervisor gunicorn
 COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN sed -i 's/\r$//g' entrypoint
-RUN chmod +x entrypoint
+RUN sed -i 's/\r$//g' ./entrypoint
+RUN chmod +x ./entrypoint
 
 EXPOSE 8000
 
-ENTRYPOINT ["entrypoint"]
+ENTRYPOINT ["./entrypoint"]

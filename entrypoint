@@ -3,4 +3,4 @@
 python ./manage.py collectstatic --noinput
 python ./manage.py migrate
 
-/usr/local/bin/gunicorn healthbuddy_backend.wsgi -c gunicorn/gunicorn.conf.py
+gunicorn healthbuddy_backend.wsgi -c gunicorn/gunicorn.conf.py

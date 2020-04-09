@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "set your secret key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -87,7 +87,7 @@ DATABASES = {
         'NAME': os.environ.get("DB_NAME", "healthbuddy"),
         'USER': os.environ.get("DB_USER", "ilha_healthbuddy"),
         'PASSWORD': os.environ.get("DB_PASSWORD", "ilha102030"),
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -130,3 +130,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')

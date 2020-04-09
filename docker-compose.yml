@@ -7,9 +7,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - DB_NAME=${DB_NAME:-healthbuddy}
-      - DB_USER=${DB_USER:-ilha_healthbuddy}
-      - DB_PASSWORD=${DB_PASSWORD:-ilha102030}
+      - POSTGRES_DB=${POSTGRES_DB:-healthbuddy}
+      - POSTGRES_USER=${POSTGRES_USER:-ilha_healthbuddy}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-ilha102030}
   web:
     build:
       context: .
