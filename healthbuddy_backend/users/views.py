@@ -25,6 +25,7 @@ class UserCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
 
 class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    ################ FAZER SOFT DELETE
     http_method_names = ['post']
     model = User
     permission_required = ("auth.delete_user",)
