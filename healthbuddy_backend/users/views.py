@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.detail import DetailView
@@ -25,11 +26,22 @@ class UserCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
 
 class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    ################ FAZER SOFT DELETE
-    http_method_names = ['post']
+    http_method_names = ["post"]
     model = User
     permission_required = ("auth.delete_user",)
     success_url = reverse_lazy("list_user")
+
+
+class UserAccessManagementView(UserDeleteView):
+    def _revert_user_status(self):
+        user = self.get_object()
+        current_status = user.is_active
+        user.is_active = not current_status
+        user.save()
+
+    def delete(self, request, *args, **kwargs):
+        self._revert_user_status()
+        return HttpResponseRedirect(self.success_url)
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
