@@ -2,7 +2,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
@@ -39,17 +39,7 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 
 class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = User
-    permission_required = ("auth.change_user",)
     fields = ["username", "first_name", "last_name", "email"]
+    permission_required = ("auth.change_user",)
     template_name = "users/form_user.html"
     success_url = reverse_lazy("list_user")
-    #mandar no contexto o formulário de alterar senha
-
-
-class UserPasswordChangeView(PasswordChangeView):
-    http_method_names = ['post']
-    #form_class = PasswordChangeForm
-    permission_required = ("auth.change_user",)
-
-    def get_success_url(self):
-        return reverse_lazy("update_user", kwargs={'pk': self.kwargs['pk']})
