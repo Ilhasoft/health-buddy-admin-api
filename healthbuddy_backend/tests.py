@@ -14,9 +14,13 @@ class UserAuthTestCase(TestCase):
     def test_login_fail(self):
         fail_login_password = self.client.login(username="test", password="password_wrong")
         fail_login_username = self.client.login(username="test_wrong", password="password_correct")
-        self.assertFalse(fail_login_password)
-        self.assertFalse(fail_login_username)
+        self.assertIs(fail_login_password, False)
+        self.assertIs(fail_login_username,False)
 
     def test_login_success(self):
         success_login = self.client.login(username="test", password="password_correct")
-        self.assertTrue(success_login)
+        self.assertIs(success_login, True)
+
+    def test_logout(self):
+        logout_success = self.client.logout()
+        self.assertIsNone(logout_success)
