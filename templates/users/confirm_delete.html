@@ -1,0 +1,5 @@
+ <form method="post" action="{% url 'delete_user' user.pk %}">
+     {% csrf_token %}
+     <!-- ADD MESSAGE CONFIRMATION -->
+     <button type="submit">remove</button>
+ </form>

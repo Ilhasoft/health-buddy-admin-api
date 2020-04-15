@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<hr>
+<a href="{% url 'add_user' %}">ADD</a>
+
+<hr>
+
+<table>
+    <tr>
+        <th>aa</th>
+        <th></th>
+        <th></th>
+    </tr>
+    {% for user in users %}
+        <tr>
+            <td><a href="{% url 'detail_user' user.pk %}">{{user.username}}</a></td>
+            {% if perms.auth.delete_user %}
+            <td>
+                {% include 'users/confirm_delete.html' with user=user %}
+            </td>
+            {% endif %}
+            {% if perms.auth.change_user %}
+            <td><a href="{% url 'update_user' user.pk %}">EDIT</a></td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
