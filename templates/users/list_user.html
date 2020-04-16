@@ -16,7 +16,7 @@
             <td><a href="{% url 'detail_user' user.pk %}">{{user.username}}</a></td>
             {% if perms.auth.delete_user %}
             <td>
-                {% include 'users/confirm_delete.html' with user=user %}
+                {% include "users/confirm_delete.html" with user=user %}
             </td>
             {% endif %}
             {% if perms.auth.change_user %}

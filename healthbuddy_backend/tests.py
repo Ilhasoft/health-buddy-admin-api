@@ -1,6 +1,5 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from django.test import Client
 
 
 class UserAuthTestCase(TestCase):
@@ -15,7 +14,7 @@ class UserAuthTestCase(TestCase):
         fail_login_password = self.client.login(username="test", password="password_wrong")
         fail_login_username = self.client.login(username="test_wrong", password="password_correct")
         self.assertIs(fail_login_password, False)
-        self.assertIs(fail_login_username,False)
+        self.assertIs(fail_login_username, False)
 
     def test_login_success(self):
         success_login = self.client.login(username="test", password="password_correct")

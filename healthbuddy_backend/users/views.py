@@ -1,12 +1,10 @@
 from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm, SetPasswordForm
-from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.urls import reverse_lazy
 
 from .forms import CustomUserCreationForm
 
@@ -18,9 +16,23 @@ class UserListView(LoginRequiredMixin, ListView):
     context_object_name = "users"
 
 
+class UserDetailView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = "users/detail_user.html"
+    context_object_name = "user"
+
+
 class UserCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = CustomUserCreationForm
     permission_required = ("auth.add_user",)
+    template_name = "users/form_user.html"
+    success_url = reverse_lazy("list_user")
+
+
+class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = User
+    fields = ["username", "first_name", "last_name", "email"]
+    permission_required = ("auth.change_user",)
     template_name = "users/form_user.html"
     success_url = reverse_lazy("list_user")
 
@@ -42,17 +54,3 @@ class UserAccessManagementView(UserDeleteView):
     def delete(self, request, *args, **kwargs):
         self._revert_user_status()
         return HttpResponseRedirect(self.success_url)
-
-
-class UserDetailView(LoginRequiredMixin, DetailView):
-    model = User
-    template_name = "users/detail_user.html"
-    context_object_name = "user"
-
-
-class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    model = User
-    fields = ["username", "first_name", "last_name", "email"]
-    permission_required = ("auth.change_user",)
-    template_name = "users/form_user.html"
-    success_url = reverse_lazy("list_user")

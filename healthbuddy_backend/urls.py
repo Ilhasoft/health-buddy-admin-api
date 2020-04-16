@@ -3,8 +3,8 @@ from django.urls import path, include
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('dashboard/', include("healthbuddy_backend.dashboard.urls")),
+    path("admin/", admin.site.urls),
+    path("dashboard/", include("healthbuddy_backend.dashboard.urls")),
     path("users/", include("healthbuddy_backend.users.urls")),
     path("publications/", include("healthbuddy_backend.publications.urls")),
     path("videos/", include("healthbuddy_backend.videos.urls")),
