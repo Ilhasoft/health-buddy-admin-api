@@ -1,56 +1,48 @@
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
-from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.views.generic.detail import DetailView
 from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 
-from .forms import CustomUserCreationForm
-
-
-class UserListView(LoginRequiredMixin, ListView):
-    model = User
-    paginate_by = 10
-    template_name = "users/list_user.html"
-    context_object_name = "users"
+from .serializers import UserSerializer, ChangePasswordSerializer
+from ..utils.permissions import IsSelfUser, IsAdminOrSelfUser
+from ..utils.views import MixedPermissionModelViewSet
 
 
-class UserDetailView(LoginRequiredMixin, DetailView):
-    model = User
-    template_name = "users/detail_user.html"
-    context_object_name = "user"
+class UserViewSet(MixedPermissionModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    filterset_fields = ["username", "email", "first_name", "is_staff", "is_superuser", "is_active"]
+    search_fields = ["username", "email", "first_name"]
+    ordering_fields = ["username", "email", "first_name", "is_staff", "is_superuser", "is_active"]
+    ordering = ["date_joined"]
 
+    permission_classes_by_action = {
+        "create": [IsAdminUser],
+        "update": [IsAdminOrSelfUser],
+        "partial_update": [IsAdminOrSelfUser],
+        "destroy": [IsAdminUser],
+    }
 
-class UserCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    form_class = CustomUserCreationForm
-    permission_required = ("auth.add_user",)
-    template_name = "users/form_user.html"
-    success_url = reverse_lazy("list_user")
+    @action(methods=["put"], detail=True, permission_classes=[IsSelfUser])
+    def change_password(self, request, pk=None):
+        instance = self.get_object()
+        serializer = ChangePasswordSerializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
 
+        instance.set_password(serializer.validated_data.get("new_password"))
+        instance.save()
 
-class UserUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    model = User
-    fields = ["username", "first_name", "last_name", "email"]
-    permission_required = ("auth.change_user",)
-    template_name = "users/form_user.html"
-    success_url = reverse_lazy("list_user")
+        return Response({"message": f"{instance.username} password was changed"})
 
+    @action(methods=["put"], detail=True, permission_classes=[IsAdminUser])
+    def change_permission(self, request, pk=None):
+        instance = self.get_object()
+        instance.is_staff = not instance.is_staff
+        instance.save()
 
-class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    http_method_names = ["post"]
-    model = User
-    permission_required = ("auth.delete_user",)
-    success_url = reverse_lazy("list_user")
+        return Response({"message": f"{instance.username} permission has been changed"})
 
-
-class UserAccessManagementView(UserDeleteView):
-    def _revert_user_status(self):
-        user = self.get_object()
-        current_status = user.is_active
-        user.is_active = not current_status
-        user.save()
-
-    def delete(self, request, *args, **kwargs):
-        self._revert_user_status()
-        return HttpResponseRedirect(self.success_url)
+    def perform_destroy(self, instance):
+        """Soft delete."""
+        instance.is_active = False
+        instance.save()
