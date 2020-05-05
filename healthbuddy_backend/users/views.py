@@ -13,7 +13,7 @@ class UserViewSet(MixedPermissionModelViewSet):
     serializer_class = UserSerializer
     filterset_fields = ["username", "email", "first_name", "is_staff", "is_superuser", "is_active"]
     search_fields = ["username", "email", "first_name"]
-    ordering_fields = ["username", "email", "first_name", "is_staff", "is_superuser", "is_active"]
+    ordering_fields = ["username", "email", "first_name", "is_staff", "is_superuser", "is_active", "date_joined"]
     ordering = ["date_joined"]
 
     permission_classes_by_action = {
