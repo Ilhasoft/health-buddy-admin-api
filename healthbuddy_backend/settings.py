@@ -52,7 +52,8 @@ INSTALLED_APPS += [
 # system apps
 INSTALLED_APPS += [
     "healthbuddy_backend.users",
-    "healthbuddy_backend.publications",
+    "healthbuddy_backend.posts",
+    "healthbuddy_backend.articles",
     "healthbuddy_backend.videos",
 ]
 
@@ -134,6 +135,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
