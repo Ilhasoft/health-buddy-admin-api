@@ -54,6 +54,7 @@ INSTALLED_APPS += [
     "healthbuddy_backend.users",
     "healthbuddy_backend.posts",
     "healthbuddy_backend.articles",
+    "healthbuddy_backend.fake_news",
     "healthbuddy_backend.videos",
 ]
 
