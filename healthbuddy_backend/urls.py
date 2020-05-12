@@ -12,7 +12,7 @@ from .fake_news.views import FakeNewsViewSet
 from .posts.views import ImageCreateView
 from .users.views import UserViewSet
 from .articles.views import ArticleViewSet
-
+from .videos.views import VideoViewSet
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -29,6 +29,7 @@ router = routers.DefaultRouter(trailing_slash=False)
 router.register(r"users", UserViewSet)
 router.register(r"articles", ArticleViewSet)
 router.register(r"fake-news", FakeNewsViewSet)
+router.register(r"videos", VideoViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
