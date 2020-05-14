@@ -8,6 +8,7 @@ from rest_framework import permissions
 from rest_framework import routers
 from rest_framework_simplejwt import views as jwt_views
 
+from .fake_news.views import FakeNewsViewSet
 from .posts.views import ImageCreateView
 from .users.views import UserViewSet
 from .articles.views import ArticleViewSet
@@ -27,6 +28,7 @@ schema_view = get_schema_view(
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r"users", UserViewSet)
 router.register(r"articles", ArticleViewSet)
+router.register(r"fake-news", FakeNewsViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Post(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=120, unique=True)
     slug = AutoSlugField(max_length=120, unique=True, always_update=True, populate_from="title")
     subtitle = models.CharField(max_length=255)
