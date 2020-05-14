@@ -1,3 +1,7 @@
 from django.db import models
 
-# Create your models here.
+from ..posts.models import Post
+
+
+class Video(Post):
+    video = models.FileField(blank=False, null=False)

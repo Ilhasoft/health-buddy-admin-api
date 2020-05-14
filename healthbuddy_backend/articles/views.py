@@ -1,17 +1,12 @@
 from rest_framework import viewsets
-from rest_framework.parsers import FormParser, MultiPartParser
 
-from .models import Video
-from .serializers import VideoSerializer
+from .models import Article
+from .serializers import ArticleSerializer
 
 
-class VideoViewSet(viewsets.ModelViewSet):
-    parser_classes = (
-        FormParser,
-        MultiPartParser,
-    )
-    queryset = Video.objects.all()
-    serializer_class = VideoSerializer
+class ArticleViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
     lookup_field = "slug"
     filterset_fields = ["author", "title", "slug", "subtitle", "published", "created_on", "modified_on"]
     search_fields = ["author", "title", "slug", "subtitle"]
