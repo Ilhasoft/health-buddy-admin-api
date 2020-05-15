@@ -6,9 +6,9 @@ from rest_framework import serializers
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        read_only_fields = ("is_staff", "is_active")
+        read_only_fields = ("id", "is_staff", "is_active")
         extra_kwargs = {"password": {"write_only": True, "min_length": 8, "required": False}}
-        fields = ["url", "username", "password", "email", "first_name", "last_name", "is_staff", "is_active"]
+        fields = ["url", "id", "username", "password", "email", "first_name", "last_name", "is_staff", "is_active"]
 
     def get_fields(self):
         fields = super().get_fields()
