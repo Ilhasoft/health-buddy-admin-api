@@ -294,5 +294,30 @@ class UserUpdateTestCase(AuthenticationTestTemplate):
         self.assertEqual(User.objects.last().username, "userupdated")
 
 
+class UserMyProfileTestCase(AuthenticationTestTemplate):
+    def _get_callable_client_method_http(self):
+        return self._client.get
+
+    def _get_basename_url(self):
+        return "user-my-profile"
+
+    def _get_kwargs_url(self):
+        return {}
+
+    def test_action_user_without_permission(self):
+        """all logged user has permission."""
+        pass
+
+    def test_my_profile_user(self):
+        tokens = self.get_token_valid_normal_user()
+        token_access = tokens.get("access")
+        self._client.credentials(HTTP_AUTHORIZATION=f" Bearer {token_access}")
+        user = User.objects.last()
+        resp = self._client.get(reverse_lazy(self._get_basename_url()))
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data.get("username"), user.username)
+
+
 # way to turn a test case class into an abstract
 del AuthenticationTestTemplate
