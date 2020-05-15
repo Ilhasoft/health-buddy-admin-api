@@ -99,7 +99,7 @@ DATABASES = {
         "NAME": os.environ.get("POSTGRES_DB", "healthbuddy"),
         "USER": os.environ.get("POSTGRES_USER", "ilha_healthbuddy"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "ilha102030"),
-        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+        "HOST": os.environ.get("POSTGRES_HOST", "db"),
         "PORT": "5432",
     }
 }
