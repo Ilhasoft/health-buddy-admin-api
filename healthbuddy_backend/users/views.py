@@ -42,6 +42,13 @@ class UserViewSet(MixedPermissionModelViewSet):
 
         return Response({"message": f"{instance.username} permission has been changed"})
 
+    @action(methods=["GET"], detail=False)
+    def my_profile(self, request):
+        user = request.user
+        user_serialized = self.get_serializer(user)
+
+        return Response(user_serialized.data)
+
     def perform_destroy(self, instance):
         """Soft delete."""
         instance.is_active = False
