@@ -49,6 +49,14 @@ class UserViewSet(MixedPermissionModelViewSet):
 
         return Response(user_serialized.data)
 
+    @action(methods=["PATCH"], detail=True, permission_classes=[IsAdminUser])
+    def active_user(self, request, pk=None):
+        user = self.get_object()
+        user.is_active = True
+        user.save()
+
+        return Response(data={"message": f"{user.username} user has been activated!"}, status=200)
+
     def perform_destroy(self, instance):
         """Soft delete."""
         instance.is_active = False
