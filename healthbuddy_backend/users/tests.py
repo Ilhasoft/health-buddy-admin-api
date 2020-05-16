@@ -145,6 +145,29 @@ class UserDeleteTestCase(AuthenticationTestTemplate):
         self.assertEqual(resp.status_code, 204)
 
 
+class UserActiveTestCase(AuthenticationTestTemplate):
+    def _get_callable_client_method_http(self):
+        return self._client.patch
+
+    def _get_basename_url(self):
+        return "user-active-user"
+
+    def _get_kwargs_url(self):
+        return {"pk": 1}
+
+    def test_active_successful(self):
+        user = self.create_normal_user(username="usertobeactivate")
+        user.is_active = False
+        user.save()
+        tokens = self.get_token_valid_admin_user()
+        token_access = tokens.get("access")
+        self._client.credentials(HTTP_AUTHORIZATION=f" Bearer {token_access}")
+        resp = self._client.patch(reverse_lazy("user-active-user", kwargs={"pk": user.pk}))
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data.get("message"), f"{user.username} user has been activated!")
+        self.assertTrue(User.objects.get(pk=user.pk).is_active)
+
+
 class UserChangePermissionTestCase(AuthenticationTestTemplate):
     def _get_callable_client_method_http(self):
         return self._client.put
