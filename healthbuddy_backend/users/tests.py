@@ -15,15 +15,11 @@ class UserListTestCase(AuthenticationTestTemplate):
     def _get_kwargs_url(self):
         return {}
 
-    def test_action_user_without_permission(self):
-        """all logged user has permission."""
-        pass
-
     def test_list_10_obj_paginated_token(self):
         for i in range(0, 10):
             self.create_normal_user(username=f"test{i}")
 
-        tokens = self.get_token_valid_normal_user()
+        tokens = self.get_token_valid_admin_user()
         token_access = tokens.get("access")
         self._client.credentials(HTTP_AUTHORIZATION=f" Bearer {token_access}")
         resp = self._make_request()
@@ -43,13 +39,9 @@ class UserDetailTestCase(AuthenticationTestTemplate):
     def _get_kwargs_url(self):
         return {"pk": 1}
 
-    def test_action_user_without_permission(self):
-        """all logged user has permission."""
-        pass
-
     def test_detail_obj_token(self):
         user = self.create_normal_user(username="test")
-        tokens = self.get_token_valid_normal_user()
+        tokens = self.get_token_valid_admin_user()
         token_access = tokens.get("access")
         self._client.credentials(HTTP_AUTHORIZATION=f" Bearer {token_access}")
         resp = self._client.get(reverse_lazy("user-detail", kwargs={"pk": user.pk}))
