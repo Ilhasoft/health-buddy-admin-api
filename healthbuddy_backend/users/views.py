@@ -11,12 +11,24 @@ from ..utils.views import MixedPermissionModelViewSet
 class UserViewSet(MixedPermissionModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    filterset_fields = ["username", "email", "first_name", "is_staff", "is_superuser", "is_active"]
-    search_fields = ["username", "email", "first_name"]
-    ordering_fields = ["username", "email", "first_name", "is_staff", "is_superuser", "is_active", "date_joined"]
+    filterset_fields = ["id", "username", "email", "first_name", "last_name", "is_staff", "is_superuser", "is_active"]
+    search_fields = ["id", "username", "email", "first_name", "last_name"]
+    ordering_fields = [
+        "id",
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "is_staff",
+        "is_superuser",
+        "is_active",
+        "date_joined",
+    ]
     ordering = ["date_joined"]
 
     permission_classes_by_action = {
+        "list": [IsAdminUser],
+        "retrieve": [IsAdminUser],
         "create": [IsAdminUser],
         "update": [IsAdminOrSelfUser],
         "partial_update": [IsAdminOrSelfUser],
