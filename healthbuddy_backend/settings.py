@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from datetime import timedelta
 
+from decouple import config
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,10 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", "set your secret key")
+SECRET_KEY = config("SECRET_KEY", default="set your secret key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", True)
+DEBUG = config("DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -48,6 +50,7 @@ INSTALLED_APPS += [
     "django_filters",
     "drf_yasg",
     "django_rest_passwordreset",
+    "storages",
 ]
 
 # system apps
@@ -97,10 +100,10 @@ WSGI_APPLICATION = "healthbuddy_backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_DB", "healthbuddy"),
-        "USER": os.environ.get("POSTGRES_USER", "ilha_healthbuddy"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "ilha102030"),
-        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+        "NAME": config("POSTGRES_DB", default="healthbuddy"),
+        "USER": config("POSTGRES_USER", default="ilha_healthbuddy"),
+        "PASSWORD": config("POSTGRES_PASSWORD", default="ilha102030"),
+        "HOST": config("POSTGRES_HOST", default="db"),
         "PORT": "5432",
     }
 }
@@ -157,10 +160,18 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
 }
 
+# DJANGO REST PASSWORD RESET
+DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 1
+DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
+    "CLASS": "django_rest_passwordreset.tokens.RandomStringTokenGenerator",
+    "OPTIONS": {"min_length": 10, "max_length": 10},
+}
+
+# CORS
 CORS_ORIGIN_ALLOW_ALL = True
 
 # SENDGRID
-SENDGRID_API_KEY = (os.environ.get("SENDGRID_API_KEY", "set key sendgrid api"),)
+SENDGRID_API_KEY = config("SENDGRID_API_KEY", default="set key sendgrid api")
 
 # EMAIL
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
@@ -169,3 +180,10 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 EMAIL_USE_TLS = True
+
+# AWS S3
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="set access key")
+AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default="set secret access key")
+AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME", default="set storage bucket name")
+AWS_S3_REGION_NAME = config("AWS_S3_REGION_NAME", default="set region name")
