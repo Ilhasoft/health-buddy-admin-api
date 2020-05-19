@@ -37,6 +37,7 @@ urlpatterns = [
     path("token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token_refresh"),
     path("docs/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path("api/", include(router.urls)),
+    path("api/password_reset/", include("django_rest_passwordreset.urls", namespace="password_reset")),
     path("upload/", ImageCreateView.as_view(), name="upload_image_post"),
 ]
 

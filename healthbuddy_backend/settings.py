@@ -47,11 +47,12 @@ INSTALLED_APPS += [
     "corsheaders",
     "django_filters",
     "drf_yasg",
+    "django_rest_passwordreset",
 ]
 
 # system apps
 INSTALLED_APPS += [
-    "healthbuddy_backend.users",
+    "healthbuddy_backend.users.apps.UsersConfig",
     "healthbuddy_backend.posts",
     "healthbuddy_backend.articles",
     "healthbuddy_backend.fake_news",
@@ -99,7 +100,7 @@ DATABASES = {
         "NAME": os.environ.get("POSTGRES_DB", "healthbuddy"),
         "USER": os.environ.get("POSTGRES_USER", "ilha_healthbuddy"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "ilha102030"),
-        "HOST": os.environ.get("POSTGRES_HOST", "db"),
+        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
         "PORT": "5432",
     }
 }
@@ -157,3 +158,14 @@ SIMPLE_JWT = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+# SENDGRID
+SENDGRID_API_KEY = (os.environ.get("SENDGRID_API_KEY", "set key sendgrid api"),)
+
+# EMAIL
+EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+EMAIL_HOST = "smtp.sendgrid.net"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "apikey"
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_USE_TLS = True
