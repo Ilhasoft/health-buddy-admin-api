@@ -172,8 +172,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # SENDGRID
 SENDGRID_API_KEY = config("SENDGRID_API_KEY", default="set key sendgrid api")
+SENDGRID_SANDBOX_MODE_IN_DEBUG = False
 
 # EMAIL
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="emaildefault@mail.com")
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_PORT = 587
