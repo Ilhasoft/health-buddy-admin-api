@@ -1,23 +1,40 @@
 version: '3'
 
 services:
-  db:
+  hb_database:
     image: postgres:10.12-alpine
-    container_name: db
+    container_name: hb_database
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-healthbuddy}
       - POSTGRES_USER=${POSTGRES_USER:-ilha_healthbuddy}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-ilha102030}
-      - POSTGRES_HOST=${POSTGRES_HOST:-db}
+      - POSTGRES_HOST=${POSTGRES_HOST:-hb_database}
   web:
     build:
       context: .
       dockerfile: ./docker/Dockerfile
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-healthbuddy}
+      - POSTGRES_USER=${POSTGRES_USER:-ilha_healthbuddy}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-ilha102030}
+      - POSTGRES_HOST=${POSTGRES_HOST:-hb_database}
+
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG:-true}
+
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
+      - AWS_S3_REGION_NAME=${AWS_S3_REGION_NAME}
+
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
+
+      - TOKEN_ORG_RAPIDPRO=${TOKEN_ORG_RAPIDPRO}
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      - hb_database
