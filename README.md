@@ -5,35 +5,26 @@
 ### Set environment variable
 Create a file called `.env` at the root of the project and assign the following variables:
 
-- `DEBUG`: Enable/disable the debug mode. 
-    - Development Default: `True`
-    - Production: `False`
-- `SECRET_KEY`: Secret key used to cryptographic reasons;
-    - Development Default: `k+n)wd-p=iuwicmwmx1vb^suptfaz#u+g1%c!2pa9s-)c=#xz7`
-    - Required in production;
+- `POSTGRES_DB`
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `POSTGRES_HOST`
 
-### Installing the dependencies
-- Python 3.6+
-- PostgreSQL 10.12+
+- `DEBUG`
+- `SECRET_KEY`
 
-### Create and active virtualenv
+- `SENDGRID_API_KEY`
+
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_STORAGE_BUCKET_NAME`
+- `AWS_S3_REGION_NAME`
+
+- `DEFAULT_FROM_EMAIL`
+
+- `TOKEN_ORG_RAPIDPRO`
+
+### Docker
 ```shell script
-$ python3 -m venv env
-$ source env/bin/activate
-```
-#### Install requirements
-```shell script
-$ pip install -r requirements.txt
-or
-$ pip install -r requirements-dev.txt
-```
-#### Run the migrations
-```shell script
-$ cd gestotus
-$ python manage.py makemigrations
-$ python manage.py migrate
-```
-#### Now run project
-```shell script
-$ python manage.py runserver
+$ docker-compose up --build
 ```
