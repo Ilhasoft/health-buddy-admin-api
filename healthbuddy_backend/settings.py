@@ -104,7 +104,7 @@ DATABASES = {
         "NAME": config("POSTGRES_DB", default="healthbuddy"),
         "USER": config("POSTGRES_USER", default="ilha_healthbuddy"),
         "PASSWORD": config("POSTGRES_PASSWORD", default="ilha102030"),
-        "HOST": config("POSTGRES_HOST", default="hb_database"),
+        "HOST": config("POSTGRES_HOST", default="db"),
         "PORT": "5432",
     }
 }
