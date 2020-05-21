@@ -60,6 +60,7 @@ INSTALLED_APPS += [
     "healthbuddy_backend.articles",
     "healthbuddy_backend.fake_news",
     "healthbuddy_backend.videos",
+    "healthbuddy_backend.proxy",
 ]
 
 MIDDLEWARE = [
@@ -103,7 +104,7 @@ DATABASES = {
         "NAME": config("POSTGRES_DB", default="healthbuddy"),
         "USER": config("POSTGRES_USER", default="ilha_healthbuddy"),
         "PASSWORD": config("POSTGRES_PASSWORD", default="ilha102030"),
-        "HOST": config("POSTGRES_HOST", default="db"),
+        "HOST": config("POSTGRES_HOST", default="hb_database"),
         "PORT": "5432",
     }
 }
@@ -189,3 +190,6 @@ AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="set access key")
 AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default="set secret access key")
 AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME", default="set storage bucket name")
 AWS_S3_REGION_NAME = config("AWS_S3_REGION_NAME", default="set region name")
+
+# RAPIDPRO CONFIG
+TOKEN_ORG_RAPIDPRO = config("TOKEN_ORG_RAPIDPRO", default="set token org rapidpro")
