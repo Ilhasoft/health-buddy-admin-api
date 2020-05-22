@@ -138,9 +138,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = "/static/"
+# todo: put this to dev
+# STATIC_URL = "/static/"
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -184,12 +185,23 @@ EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 EMAIL_USE_TLS = True
 
+# RAPIDPRO CONFIG
+TOKEN_ORG_RAPIDPRO = config("TOKEN_ORG_RAPIDPRO", default="set token org rapidpro")
+
 # AWS S3
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default="set access key")
 AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default="set secret access key")
 AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME", default="set storage bucket name")
 AWS_S3_REGION_NAME = config("AWS_S3_REGION_NAME", default="set region name")
 
-# RAPIDPRO CONFIG
-TOKEN_ORG_RAPIDPRO = config("TOKEN_ORG_RAPIDPRO", default="set token org rapidpro")
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+AWS_LOCATION = "static"
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+
+AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+
+STATICFILES_STORAGE = "healthbuddy_backend.storage_backends.StaticStorage"
+AWS_PUBLIC_MEDIA_LOCATION = "media/public"
+DEFAULT_FILE_STORAGE = "healthbuddy_backend.storage_backends.PublicMediaStorage"
+AWS_PRIVATE_MEDIA_LOCATION = "media/private"
+PRIVATE_FILE_STORAGE = "healthbuddy_backend.storage_backends.PrivateMediaStorage"
