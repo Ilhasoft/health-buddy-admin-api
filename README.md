@@ -1,6 +1,6 @@
 # HealthBuddy
 
-## Getting started
+## Getting Started
 
 ### Set environment variable
 Create a file called `.env` at the root of the project and assign the following variables:
