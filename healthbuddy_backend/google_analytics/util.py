@@ -3,9 +3,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 
 def get_service(key_file_location):
-    scopes = ['https://www.googleapis.com/auth/google_analytics.readonly']
+    scopes = ['https://www.googleapis.com/auth/analytics.readonly']
     credentials = ServiceAccountCredentials.from_json_keyfile_name(key_file_location, scopes=scopes)
-    return build('google_analytics', 'v3', credentials=credentials)
+    return build('analytics', 'v3', credentials=credentials)
 
 
 def get_metric_value(key_file_location, profile_id, metrics='pageviews', start_date='365daysAgo', end_date='today',):
