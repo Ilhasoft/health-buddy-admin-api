@@ -205,3 +205,8 @@ AWS_PUBLIC_MEDIA_LOCATION = "media/public"
 DEFAULT_FILE_STORAGE = "healthbuddy_backend.storage_backends.PublicMediaStorage"
 AWS_PRIVATE_MEDIA_LOCATION = "media/private"
 PRIVATE_FILE_STORAGE = "healthbuddy_backend.storage_backends.PrivateMediaStorage"
+
+# GOOGLE API AUTH
+GOOGLE_API_KEY_FILENAME = config("GOOGLE_API_KEY_FILENAME")
+GOOGLE_API_KEY_FILE_PATH = os.path.join(BASE_DIR, GOOGLE_API_KEY_FILENAME)
+GOOGLE_API_PROFILE_ID = config("GOOGLE_API_PROFILE_ID")

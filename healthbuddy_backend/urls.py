@@ -40,6 +40,7 @@ urlpatterns = [
     path("api/password_reset/", include("django_rest_passwordreset.urls", namespace="password_reset")),
     path("upload/", ImageCreateView.as_view(), name="upload_image_post"),
     path("proxy/", include("healthbuddy_backend.proxy.urls"), name="proxy"),
+    path("google_analytics/", include("healthbuddy_backend.google_analytics.urls"), name="google_analytics"),
 ]
 
 if settings.DEBUG:
