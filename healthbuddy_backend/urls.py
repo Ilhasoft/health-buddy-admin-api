@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -41,6 +42,7 @@ urlpatterns = [
     path("upload/", ImageCreateView.as_view(), name="upload_image_post"),
     path("proxy/", include("healthbuddy_backend.proxy.urls"), name="proxy"),
     path("google_analytics/", include("healthbuddy_backend.google_analytics.urls"), name="google_analytics"),
+    path("", TemplateView.as_view(template_name="index.html"), name="index"),
 ]
 
 if settings.DEBUG:
