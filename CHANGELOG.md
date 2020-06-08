@@ -1,3 +1,7 @@
+v0.1.5
+----------
+* Add google analytics integration
+
 v0.1.4
 ----------
 * Add forgot password
