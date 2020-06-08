@@ -1,5 +1,7 @@
 # HealthBuddy
 
+Dashboard
+
 ## Getting Started
 
 ### Set environment variable
