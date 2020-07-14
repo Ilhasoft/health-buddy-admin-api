@@ -60,7 +60,7 @@ INSTALLED_APPS += [
     "healthbuddy_backend.articles",
     "healthbuddy_backend.fake_news",
     "healthbuddy_backend.videos",
-    "healthbuddy_backend.proxy",
+    "healthbuddy_backend.rapidpro",
 ]
 
 MIDDLEWARE = [
