@@ -3,6 +3,19 @@ from django.conf import settings
 from rest_framework.request import Request
 
 
+RAPID_PRO_URL = "https://rapidpro.ilhasoft.mobi/api/v2/{}.json"
+
+
+def get_flow(flow_uuid=""):
+    http_method = "get"
+    url = RAPID_PRO_URL.format("flows")
+    params = {"uuid": flow_uuid}
+    headers = {"Authorization": f"Token {settings.TOKEN_ORG_RAPIDPRO}"}
+    response = requests.request(http_method, url, params=params, headers=headers)
+
+    return response.json()
+
+
 class ProxyRapidPro:
     """
     Turns the request into a RapidPro Request
@@ -12,7 +25,7 @@ class ProxyRapidPro:
 
     def __init__(self, request):
         self.request: Request = request
-        self.base_url: str = "https://rapidpro.ilhasoft.mobi/api/v2/{}.json"
+        self.base_url: str = RAPID_PRO_URL
         self.__token: str = settings.TOKEN_ORG_RAPIDPRO
 
     def __get_headers(self) -> dict:
