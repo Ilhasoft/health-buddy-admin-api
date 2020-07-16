@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+  db:
+    image: postgres:10.12-alpine
+    container_name: db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-healthbuddy}
+      - POSTGRES_USER=${POSTGRES_USER:-ilha_healthbuddy}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-ilha102030}
+      - POSTGRES_HOST=${POSTGRES_HOST:-db}
+  web:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    entrypoint: ./docker/entrypoint.web.sh
+    env_file:
+      - ../.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+  celery:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    entrypoint: ./docker/entrypoint.celery.beat.sh
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL:-redis://redis:6379}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND:-redis://redis:6379}
+    depends_on:
+      - redis
