@@ -12,5 +12,3 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY . /app/
-
-ENTRYPOINT ["/app/entrypoint.sh"]
