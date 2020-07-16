@@ -20,7 +20,7 @@ from decouple import config
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# Quick-entrypoint.sh development settings - unsuitable for production
+# Quick-entrypoint.web.sh development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -210,3 +210,10 @@ PRIVATE_FILE_STORAGE = "healthbuddy_backend.storage_backends.PrivateMediaStorage
 GOOGLE_API_KEY_FILENAME = config("GOOGLE_API_KEY_FILENAME", default="client_secrets.json")
 GOOGLE_API_KEY_FILE_PATH = os.path.join(BASE_DIR, GOOGLE_API_KEY_FILENAME)
 GOOGLE_API_PROFILE_ID = config("GOOGLE_API_PROFILE_ID")
+
+# Celery
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="redis://localhost:6379")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://localhost:6379")
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
