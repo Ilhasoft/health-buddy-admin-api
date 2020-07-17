@@ -1,3 +1,4 @@
+from celery.task import task
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.utils import timezone
@@ -6,11 +7,13 @@ from .models import Flow, DailyFlowRuns
 from .rapidpro import get_flow
 
 
+@task(name="sync-daily-flow-run")
 def sync_daily_flow_run():
     rapidpro_flow_data = get_flow()
-    next = rapidpro_flow_data.get("next")
+    # next = rapidpro_flow_data.get("next")
     results = rapidpro_flow_data.get("results")
 
+    rows_added = 0
     for result in results:
         uuid = result.get("uuid")
         try:
@@ -37,6 +40,9 @@ def sync_daily_flow_run():
                 expired=daily_expired,
                 day=timezone.now()
             )
+            rows_added += 1
 
         except Flow.DoesNotExist:
             pass
+
+    return f"Rows added: {rows_added}"
