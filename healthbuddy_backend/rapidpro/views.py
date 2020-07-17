@@ -22,14 +22,3 @@ class RapidProProxyView(ListAPIView):
             data = {"message": "An error has occurred!", "error": str(e)}
 
         return Response(data=data, status=response.status_code)
-
-
-class RapidProTokenView(ListAPIView):
-    """
-    Return RapidPro ORG Token
-    """
-
-    def get(self, request, *args, **kwargs):
-        data = {"token": settings.TOKEN_ORG_RAPIDPRO}
-
-        return Response(data=data, status=200)
