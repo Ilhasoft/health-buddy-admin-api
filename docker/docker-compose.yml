@@ -27,11 +27,21 @@ services:
     depends_on:
       - db
       - redis
-  celery:
+  celery-beat:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
     entrypoint: ./docker/entrypoint.celery.beat.sh
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL:-redis://redis:6379}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND:-redis://redis:6379}
+    depends_on:
+      - redis
+  celery-worker:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    entrypoint: ./docker/entrypoint.celery.worker.sh
     environment:
       - CELERY_BROKER_URL=${CELERY_BROKER_URL:-redis://redis:6379}
       - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND:-redis://redis:6379}
