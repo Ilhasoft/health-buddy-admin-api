@@ -1,9 +1,11 @@
 import requests
-from django.conf import settings
+from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
+from .models import Flow
 from .rapidpro import ProxyRapidPro
+from .serializers import FlowSerializer
 
 
 class RapidProProxyView(ListAPIView):
@@ -22,3 +24,9 @@ class RapidProProxyView(ListAPIView):
             data = {"message": "An error has occurred!", "error": str(e)}
 
         return Response(data=data, status=response.status_code)
+
+
+class FlowViewSet(viewsets.ModelViewSet):
+    serializer_class = FlowSerializer
+    queryset = Flow.objects.all()
+    http_method_names = ["get", "post", "delete"]
