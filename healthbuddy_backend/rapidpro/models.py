@@ -18,7 +18,7 @@ class Flow(models.Model):
 
 
 class DailyFlowRuns(models.Model):
-    flow = models.ForeignKey(Flow, on_delete=models.CASCADE, related_name="runs")
+    flow = models.ForeignKey(Flow, on_delete=models.PROTECT, related_name="runs")
     active = models.PositiveIntegerField(default=0)
     completed = models.PositiveIntegerField(default=0)
     interrupted = models.PositiveIntegerField(default=0)
