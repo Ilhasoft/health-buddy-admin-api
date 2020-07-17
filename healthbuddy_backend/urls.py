@@ -13,6 +13,7 @@ from .fake_news.views import FakeNewsViewSet
 from .posts.views import ImageCreateView
 from .users.views import UserViewSet
 from .articles.views import ArticleViewSet
+from .rapidpro.views import FlowViewSet
 from .videos.views import VideoViewSet
 
 schema_view = get_schema_view(
@@ -31,6 +32,7 @@ router.register(r"users", UserViewSet)
 router.register(r"articles", ArticleViewSet)
 router.register(r"fake-news", FakeNewsViewSet)
 router.register(r"videos", VideoViewSet)
+router.register(r"flows", FlowViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
