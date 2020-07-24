@@ -120,3 +120,4 @@ gunicorn.access
 gunicorn.error
 staticfiles
 client_secrets.json
+celerybeat-schedule

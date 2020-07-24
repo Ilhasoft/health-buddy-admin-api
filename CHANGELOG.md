@@ -1,3 +1,7 @@
+v0.1.7
+----------
+* Add sincronization rapidpro
+
 v0.1.6
 ----------
 * Add rapidpro integration
