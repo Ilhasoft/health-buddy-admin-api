@@ -1,3 +1,7 @@
+v0.2.0
+----------
+* Add crud flow rapidpro
+
 v0.1.7
 ----------
 * Add sincronization rapidpro
