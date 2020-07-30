@@ -1,3 +1,7 @@
+v0.2.1
+----------
+* Fix search flows
+
 v0.2.0
 ----------
 * Add crud flow rapidpro
