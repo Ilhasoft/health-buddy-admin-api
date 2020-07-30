@@ -1,3 +1,7 @@
+v0.2.2
+----------
+* Update ID to UUID Flow
+
 v0.2.1
 ----------
 * Fix search flows
