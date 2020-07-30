@@ -32,9 +32,9 @@ class RapidProProxyView(ListAPIView):
 class FlowViewSet(viewsets.ModelViewSet):
     serializer_class = FlowSerializer
     queryset = Flow.objects.all()
-    filterset_fields = ["id", "uuid", "name"]
-    search_fields = ["id", "uuid", "name"]
-    ordering_fields = ["id", "uuid", "name"]
+    filterset_fields = ["uuid", "name"]
+    search_fields = ["uuid", "name"]
+    ordering_fields = ["uuid", "name"]
     http_method_names = ["get", "post", "delete"]
 
 
