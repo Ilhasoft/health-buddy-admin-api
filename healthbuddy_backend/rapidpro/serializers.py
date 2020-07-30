@@ -6,4 +6,4 @@ from .models import Flow
 class FlowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flow
-        fields = ["uuid", "name"]
+        fields = ["id", "uuid", "name"]
