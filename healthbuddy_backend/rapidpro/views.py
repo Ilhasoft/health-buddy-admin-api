@@ -40,7 +40,7 @@ class RunsDataListView(APIView):
         filters = {}
 
         start_date = query_params.get("start_date", "2000-01-01")
-        end_date = query_params.get("end_date", date.today())
+        end_date = query_params.get("end_date", "2999-01-01")
         filters["day__range"] = [
             start_date,
             end_date
