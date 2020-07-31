@@ -1,3 +1,7 @@
+v0.2.3
+----------
+* Ordering by status flow
+
 v0.2.2
 ----------
 * Update ID to UUID Flow

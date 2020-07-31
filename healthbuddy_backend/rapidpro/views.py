@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from .models import Flow, DailyFlowRuns
 from .rapidpro import ProxyRapidPro
-from .serializers import FlowSerializer
+from .serializers import FlowSerializer, MostAccessedFlowStatusSerializer
 
 
 class RapidProProxyView(ListAPIView):
@@ -67,3 +67,17 @@ class RunsDataListView(APIView):
         )
 
         return Response(sum_results, status=200)
+
+
+class MostAccessedFlowStatus(APIView):
+    def get(self, request, attribute):
+        flows = Flow.objects.all().annotate(
+            active=Sum("runs__active"),
+            completed=Sum("runs__completed"),
+            interrupted=Sum("runs__interrupted"),
+            expired=Sum("runs__expired")
+        ).order_by(f"-{attribute}")
+
+        flows_serializer = MostAccessedFlowStatusSerializer(flows, many=True)
+
+        return Response(flows_serializer.data, status=200)
