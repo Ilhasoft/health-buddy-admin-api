@@ -1,3 +1,7 @@
+v0.3.0
+----------
+* Deactivate and update flows
+
 v0.2.3
 ----------
 * Ordering by status flow
