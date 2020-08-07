@@ -2,7 +2,9 @@ from datetime import date
 import requests
 from django.db.models import Sum
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -35,7 +37,20 @@ class FlowViewSet(viewsets.ModelViewSet):
     filterset_fields = ["uuid", "name"]
     search_fields = ["uuid", "name"]
     ordering_fields = ["uuid", "name"]
-    http_method_names = ["get", "post", "delete"]
+    http_method_names = ["get", "put", "post", "delete"]
+
+    def perform_destroy(self, instance):
+        # Soft delete
+        instance.active = False
+        instance.save()
+
+    @action(methods=["put"], detail=True, permission_classes=[IsAdminUser])
+    def active(self, request, pk=None):
+        flow = self.get_object()
+        flow.active = True
+        flow.save()
+
+        return Response(data={"message": f"{flow.name} has been activated!"}, status=200)
 
 
 class RunsDataListView(APIView):
