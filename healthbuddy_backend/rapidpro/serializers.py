@@ -6,8 +6,8 @@ from .models import Flow
 class FlowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flow
-        fields = ["uuid", "name", "active"]
-        read_only_fields = ["active"]
+        fields = ["uuid", "name", "is_active"]
+        read_only_fields = ["is_active"]
 
     def update(self, instance, validated_data):
         validated_data.pop("uuid")
