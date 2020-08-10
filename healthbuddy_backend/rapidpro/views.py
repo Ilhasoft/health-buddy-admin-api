@@ -34,9 +34,9 @@ class RapidProProxyView(ListAPIView):
 class FlowViewSet(viewsets.ModelViewSet):
     serializer_class = FlowSerializer
     queryset = Flow.objects.all()
-    filterset_fields = ["uuid", "name"]
-    search_fields = ["uuid", "name"]
-    ordering_fields = ["uuid", "name"]
+    filterset_fields = ["uuid", "name", "active"]
+    search_fields = ["uuid", "name", "active"]
+    ordering_fields = ["uuid", "name", "active"]
     http_method_names = ["get", "put", "post", "delete"]
 
     def perform_destroy(self, instance):
