@@ -6,7 +6,7 @@ from .rapidpro import get_flow
 class Flow(models.Model):
     uuid = models.CharField(max_length=255, primary_key=True)
     name = models.CharField(max_length=255)
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     def get_flow_data(self):
         flow_data = get_flow(self.uuid)
