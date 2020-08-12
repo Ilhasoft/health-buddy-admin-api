@@ -34,20 +34,20 @@ class RapidProProxyView(ListAPIView):
 class FlowViewSet(viewsets.ModelViewSet):
     serializer_class = FlowSerializer
     queryset = Flow.objects.all()
-    filterset_fields = ["uuid", "name", "active"]
-    search_fields = ["uuid", "name", "active"]
-    ordering_fields = ["uuid", "name", "active"]
+    filterset_fields = ["uuid", "name", "is_active"]
+    search_fields = ["uuid", "name", "is_active"]
+    ordering_fields = ["uuid", "name", "is_active"]
     http_method_names = ["get", "put", "post", "delete"]
 
     def perform_destroy(self, instance):
         # Soft delete
-        instance.active = False
+        instance.is_active = False
         instance.save()
 
     @action(methods=["put"], detail=True, permission_classes=[IsAdminUser])
     def active(self, request, pk=None):
         flow = self.get_object()
-        flow.active = True
+        flow.is_active = True
         flow.save()
 
         return Response(data={"message": f"{flow.name} has been activated!"}, status=200)
