@@ -19,7 +19,6 @@ def sync_daily_flow_run():
         try:
             flow = Flow.objects.get(uuid=uuid)
             total_runs_database = flow.runs.all().aggregate(
-                total_active=Coalesce(Sum("active"), 0),
                 total_completed=Coalesce(Sum("completed"), 0),
                 total_interrupted=Coalesce(Sum("interrupted"), 0),
                 total_expired=Coalesce(Sum("expired"), 0)
@@ -27,14 +26,13 @@ def sync_daily_flow_run():
 
             new_total_runs = result.get("runs")
 
-            daily_active = new_total_runs.get("active", 0) - total_runs_database.get("total_active", 0)
             daily_completed = new_total_runs.get("completed", 0) - total_runs_database.get("total_completed", 0)
             daily_interrupted = new_total_runs.get("interrupted", 0) - total_runs_database.get("total_interrupted", 0)
             daily_expired = new_total_runs.get("expired", 0) - total_runs_database.get("total_expired", 0)
 
             new_daily_run = DailyFlowRuns.objects.create(
                 flow=flow,
-                active=daily_active,
+                active=new_total_runs.get("active", 0),
                 completed=daily_completed,
                 interrupted=daily_interrupted,
                 expired=daily_expired,
