@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Flow
+from .models import Flow, DailyFlowRuns
 
 
 class FlowSerializer(serializers.ModelSerializer):
@@ -12,6 +12,14 @@ class FlowSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         validated_data.pop("uuid")
         return super().update(instance, validated_data)
+
+
+class DailyFlowRunsSerializer(serializers.ModelSerializer):
+    flow = FlowSerializer()
+
+    class Meta:
+        model = DailyFlowRuns
+        fields = ["flow", "active", "completed", "interrupted", "expired", "day"]
 
 
 class MostAccessedFlowStatusSerializer(serializers.Serializer):
