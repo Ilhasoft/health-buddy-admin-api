@@ -1,4 +1,3 @@
-from datetime import date
 import requests
 from django.db.models import Sum
 from rest_framework import viewsets
@@ -10,7 +9,7 @@ from rest_framework.views import APIView
 
 from .models import Flow, DailyFlowRuns
 from .rapidpro import ProxyRapidPro
-from .serializers import FlowSerializer, MostAccessedFlowStatusSerializer
+from .serializers import FlowSerializer, MostAccessedFlowStatusSerializer, DailyFlowRunsSerializer
 
 
 class RapidProProxyView(ListAPIView):
@@ -74,12 +73,18 @@ class RunsDataListView(APIView):
         query_params = request.query_params
         filters = self._get_filters(query_params)
         runs_data = DailyFlowRuns.objects.all().filter(**filters)
+
+        last_date = runs_data.last().day.date()
+        flows_last_date = runs_data.filter(day__date=last_date)
+        actives_from_flows_last_date = sum(flows_last_date.values_list("active", flat=True))
+
         sum_results = runs_data.aggregate(
-            active=Sum("active"),
             completed=Sum("completed"),
             interrupted=Sum("interrupted"),
             expired=Sum("expired")
         )
+
+        sum_results["active"] = actives_from_flows_last_date
 
         return Response(sum_results, status=200)
 
@@ -96,3 +101,11 @@ class MostAccessedFlowStatus(APIView):
         flows_serializer = MostAccessedFlowStatusSerializer(flows, many=True)
 
         return Response(flows_serializer.data, status=200)
+
+
+class DailyFlowRunsListViewSet(APIView):
+    def get(self, request):
+        daily_flow_runs = DailyFlowRuns.objects.all()
+        daily_flow_runs_serializer = DailyFlowRunsSerializer(daily_flow_runs, many=True)
+
+        return Response(daily_flow_runs_serializer.data, status=200)
