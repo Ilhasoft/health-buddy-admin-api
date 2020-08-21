@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Flow, DailyFlowRuns
+from .models import Flow, DailyFlowRuns, Group, DailyGroupCount
 
 
 class FlowSerializer(serializers.ModelSerializer):
@@ -29,3 +29,17 @@ class MostAccessedFlowStatusSerializer(serializers.Serializer):
     completed = serializers.IntegerField()
     interrupted = serializers.IntegerField()
     expired = serializers.IntegerField()
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ["uuid", "name"]
+
+
+class DailyGroupCountSerializer(serializers.ModelSerializer):
+    group = GroupSerializer()
+
+    class Meta:
+        model = DailyGroupCount
+        fields = ["group", "count", "day"]
