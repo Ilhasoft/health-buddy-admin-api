@@ -7,9 +7,10 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Flow, DailyFlowRuns
+from .models import Flow, DailyFlowRuns, DailyGroupCount
 from .rapidpro import ProxyRapidPro
-from .serializers import FlowSerializer, MostAccessedFlowStatusSerializer, DailyFlowRunsSerializer
+from .serializers import FlowSerializer, MostAccessedFlowStatusSerializer, DailyFlowRunsSerializer, \
+    DailyGroupCountSerializer
 
 
 class RapidProProxyView(ListAPIView):
@@ -109,3 +110,13 @@ class DailyFlowRunsListViewSet(APIView):
         daily_flow_runs_serializer = DailyFlowRunsSerializer(daily_flow_runs, many=True)
 
         return Response(daily_flow_runs_serializer.data, status=200)
+
+
+class DailyGroupCountListView(ListAPIView):
+    queryset = DailyGroupCount.objects.all()
+    model = DailyGroupCount
+    pagination_class = None
+    serializer_class = DailyGroupCountSerializer
+    filterset_fields = ["group__uuid", "group__name", "day"]
+    search_fields = ["group__uuid", "group__name", "day"]
+    ordering_fields = ["group__uuid", "group__name", "day"]
