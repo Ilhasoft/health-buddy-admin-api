@@ -1,9 +1,11 @@
+import requests
 from celery.task import task
+from django.conf import settings
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 
-from .models import Flow, DailyFlowRuns
+from .models import Flow, DailyFlowRuns, Group, DailyGroupCount
 from .rapidpro import get_flow
 
 
@@ -42,5 +44,32 @@ def sync_daily_flow_run():
 
         except Flow.DoesNotExist:
             pass
+
+    return f"Rows added: {rows_added}"
+
+
+@task(name="sync-daily-group-count")
+def sync_daily_group_count():
+    next_ = "https://rapidpro.ilhasoft.mobi/api/v2/groups.json"
+    headers = {"Authorization": f"Token {settings.TOKEN_ORG_RAPIDPRO}"}
+
+    rows_added = 0
+
+    while next_:
+        response = requests.get(next_, headers=headers)
+
+        json_response = response.json()
+        results = json_response.get("results")
+
+        for result in results:
+            uuid = result.get("uuid")
+            name = result.get("name")
+            count = result.get("count")
+            group, created = Group.objects.get_or_create(uuid=uuid, name=name)
+            daily_group_count = DailyGroupCount.objects.create(group=group, count=count, day=timezone.now())
+
+            rows_added += 1
+
+        next_ = json_response.get("next")
 
     return f"Rows added: {rows_added}"
