@@ -13,7 +13,11 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'sync-daily-flow-run': {
         'task': 'sync-daily-flow-run',
-        'schedule': crontab(minute=50, hour=18)
+        'schedule': crontab(minute=50, hour=23)
+    },
+    'sync-daily-group-count': {
+        'task': 'sync-daily-group-count',
+        'schedule': crontab(minute=50, hour=23)
     },
 }
 app.conf.timezone = "UTC"
