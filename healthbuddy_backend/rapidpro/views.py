@@ -120,3 +120,10 @@ class DailyGroupCountListView(ListAPIView):
     filterset_fields = ["group__uuid", "group__name", "day"]
     search_fields = ["group__uuid", "group__name", "day"]
     ordering_fields = ["group__uuid", "group__name", "day"]
+
+    def filter_queryset(self, queryset):
+        query_params = self.request.query_params
+        start_date = query_params.get("start_date", "2000-01-01")
+        end_date = query_params.get("end_date", "2100-01-01")
+        queryset = queryset.filter(day__range=[start_date, end_date])
+        return super().filter_queryset(queryset)
