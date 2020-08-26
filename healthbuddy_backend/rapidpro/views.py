@@ -92,7 +92,7 @@ class RunsDataListView(APIView):
 
 class MostAccessedFlowStatus(APIView):
     def get(self, request, attribute):
-        flows = Flow.objects.all().annotate(
+        flows = Flow.objects.all().filter(is_active=True).annotate(
             active=Sum("runs__active"),
             completed=Sum("runs__completed"),
             interrupted=Sum("runs__interrupted"),
