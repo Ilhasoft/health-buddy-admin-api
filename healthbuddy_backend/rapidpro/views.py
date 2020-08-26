@@ -92,7 +92,7 @@ class RunsDataListView(APIView):
 
 class MostAccessedFlowStatus(APIView):
     def get(self, request, attribute):
-        flows = Flow.objects.all().annotate(
+        flows = Flow.objects.all().filter(is_active=True).annotate(
             active=Sum("runs__active"),
             completed=Sum("runs__completed"),
             interrupted=Sum("runs__interrupted"),
@@ -104,12 +104,14 @@ class MostAccessedFlowStatus(APIView):
         return Response(flows_serializer.data, status=200)
 
 
-class DailyFlowRunsListViewSet(APIView):
-    def get(self, request):
-        daily_flow_runs = DailyFlowRuns.objects.all()
-        daily_flow_runs_serializer = DailyFlowRunsSerializer(daily_flow_runs, many=True)
-
-        return Response(daily_flow_runs_serializer.data, status=200)
+class DailyFlowRunsListView(ListAPIView):
+    queryset = DailyFlowRuns.objects.all()
+    model = DailyFlowRuns
+    pagination_class = None
+    serializer_class = DailyFlowRunsSerializer
+    filterset_fields = ["flow__uuid", "flow__name", "day"]
+    search_fields = ["flow__uuid", "flow__name", "day"]
+    ordering_fields = ["flow__uuid", "flow__name", "day"]
 
 
 class DailyGroupCountListView(ListAPIView):
