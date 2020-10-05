@@ -19,6 +19,10 @@ app.conf.beat_schedule = {
         'task': 'sync-daily-group-count',
         'schedule': crontab(minute=50, hour=23)
     },
+    'sync-daily-channel-count': {
+        'task': 'sync-daily-channel-count',
+        'schedule': crontab(minute=00, hour=23)
+    },
 }
 app.conf.timezone = "UTC"
 
