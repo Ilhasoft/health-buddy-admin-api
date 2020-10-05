@@ -1,11 +1,12 @@
 import requests
+from datetime import datetime
 from celery.task import task
 from django.conf import settings
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 
-from .models import Flow, DailyFlowRuns, Group, DailyGroupCount
+from .models import Flow, DailyFlowRuns, Group, DailyGroupCount, DailyChannelCount, Channel
 from .rapidpro import get_flow
 
 
@@ -73,3 +74,47 @@ def sync_daily_group_count():
         next_ = json_response.get("next")
 
     return f"Rows added: {rows_added}"
+
+
+@task(name="sync-daily-channel-count")
+def sync_daily_channel_count():
+    next_ = "https://rapidpro.ilhasoft.mobi/api/v2/messages.json"
+    headers = {"Authorization": f"Token {settings.TOKEN_ORG_RAPIDPRO}"}
+
+    final_result = {}
+
+    last_item = DailyChannelCount.objects.last()
+    if last_item:
+        last_day = last_item.day
+        last_day = last_day.strftime("%Y-%m-%d")
+        next_ = f"{next_}?after={last_day}"
+
+    while next_:
+        response = requests.get(next_, headers=headers)
+
+        json_response = response.json()
+        results = json_response.get("results")
+
+        for result in results:
+            string_result_date = result.get("created_on")[0:10]
+
+            channel_name = result.get("channel", {}).get("name")
+            if not final_result.get(channel_name):
+                final_result[channel_name] = {
+                    "uuid": result.get("channel", {}).get("uuid")
+                }
+
+            if not final_result.get(channel_name, {}).get(string_result_date):
+                final_result[channel_name][string_result_date] = 0
+
+            final_result[channel_name][string_result_date] += 1
+
+        next_ = json_response.get("next")
+
+    for channel_name, dates_and_uuid in final_result.items():
+        channel_uuid = dates_and_uuid.pop("uuid", None)
+        channel, created = Channel.objects.get_or_create(uuid=channel_uuid, name=channel_name)
+
+        for dates, values in dates_and_uuid.items():
+            datetime_values = datetime.strptime(dates, "%Y-%m-%d")
+            channel_daily = DailyChannelCount(channel=channel, count=values, day=datetime_values)
