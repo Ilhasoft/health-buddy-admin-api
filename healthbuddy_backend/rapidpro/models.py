@@ -36,3 +36,14 @@ class DailyGroupCount(models.Model):
     group = models.ForeignKey(Group, on_delete=models.PROTECT, related_name="counts")
     count = models.PositiveIntegerField(default=0)
     day = models.DateTimeField()
+
+
+class Channel(models.Model):
+    uuid = models.CharField(max_length=255, primary_key=True)
+    name = models.CharField(max_length=255)
+
+
+class DailyChannelCount(models.Model):
+    channel = models.ForeignKey(Channel, on_delete=models.PROTECT, related_name="counts")
+    count = models.PositiveIntegerField(default=0)
+    day = models.DateTimeField()
