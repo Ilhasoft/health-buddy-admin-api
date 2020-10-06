@@ -64,7 +64,7 @@ def sync_daily_flow_run():
                     active=values.get("active"),
                     completed=values.get("completed"),
                     interrupted=values.get("interrupted"),
-                    exited=values.get("exited")
+                    expired=values.get("expired")
                 )
         except Flow.DoesNotExist:
             pass
