@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Flow, DailyFlowRuns, Group, DailyGroupCount
+from .models import Flow, DailyFlowRuns, Group, DailyGroupCount, Channel, DailyChannelCount
 
 
 class FlowSerializer(serializers.ModelSerializer):
@@ -43,3 +43,17 @@ class DailyGroupCountSerializer(serializers.ModelSerializer):
     class Meta:
         model = DailyGroupCount
         fields = ["group", "count", "day"]
+
+
+class ChannelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Channel
+        fields = ["uuid", "name"]
+
+
+class DailyChannelCountSerializer(serializers.ModelSerializer):
+    channel = ChannelSerializer()
+
+    class Meta:
+        model = DailyChannelCount
+        fields = ["channel", "count", "day"]
