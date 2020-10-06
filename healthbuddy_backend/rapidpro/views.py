@@ -7,10 +7,10 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Flow, DailyFlowRuns, DailyGroupCount
+from .models import Flow, DailyFlowRuns, DailyGroupCount, DailyChannelCount
 from .rapidpro import ProxyRapidPro
 from .serializers import FlowSerializer, MostAccessedFlowStatusSerializer, DailyFlowRunsSerializer, \
-    DailyGroupCountSerializer
+    DailyGroupCountSerializer, DailyChannelCountSerializer
 
 
 class RapidProProxyView(ListAPIView):
@@ -129,6 +129,23 @@ class DailyGroupCountListView(ListAPIView):
     filterset_fields = ["group__uuid", "group__name", "day"]
     search_fields = ["group__uuid", "group__name", "day"]
     ordering_fields = ["group__uuid", "group__name", "day"]
+
+    def filter_queryset(self, queryset):
+        query_params = self.request.query_params
+        start_date = query_params.get("start_date", "2000-01-01")
+        end_date = query_params.get("end_date", "2100-01-01")
+        queryset = queryset.filter(day__range=[start_date, end_date])
+        return super().filter_queryset(queryset).order_by("day")
+
+
+class DailyChannelCountListView(ListAPIView):
+    queryset = DailyChannelCount.objects.all()
+    model = DailyChannelCount
+    pagination_class = None
+    serializer_class = DailyChannelCountSerializer
+    filterset_fields = ["channel__uuid", "channel__name", "day"]
+    search_fields = ["channel__uuid", "channel__name", "day"]
+    ordering_fields = ["channel__uuid", "channel__name", "day"]
 
     def filter_queryset(self, queryset):
         query_params = self.request.query_params

@@ -117,4 +117,4 @@ def sync_daily_channel_count():
 
         for dates, values in dates_and_uuid.items():
             datetime_values = datetime.strptime(dates, "%Y-%m-%d")
-            channel_daily = DailyChannelCount(channel=channel, count=values, day=datetime_values)
+            channel_daily = DailyChannelCount.objects.create(channel=channel, count=values, day=datetime_values)
