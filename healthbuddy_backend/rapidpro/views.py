@@ -1,5 +1,6 @@
 import requests
 from django.db.models import Sum
+from django.db.models.functions import Coalesce
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
@@ -75,14 +76,17 @@ class RunsDataListView(APIView):
         filters = self._get_filters(query_params)
         runs_data = DailyFlowRuns.objects.all().filter(**filters)
 
-        last_date = runs_data.last().day.date()
+        try:
+            last_date = runs_data.last().day.date()
+        except AttributeError:
+            last_date = None
         flows_last_date = runs_data.filter(day__date=last_date)
         actives_from_flows_last_date = sum(flows_last_date.values_list("active", flat=True))
 
         sum_results = runs_data.aggregate(
-            completed=Sum("completed"),
-            interrupted=Sum("interrupted"),
-            expired=Sum("expired")
+            completed=Coalesce(Sum("completed"), 0),
+            interrupted=Coalesce(Sum("interrupted"), 0),
+            expired=Coalesce(Sum("expired"), 0)
         )
 
         sum_results["active"] = actives_from_flows_last_date
