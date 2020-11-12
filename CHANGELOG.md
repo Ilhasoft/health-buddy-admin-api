@@ -1,3 +1,7 @@
+v1.1.2
+----------
+* Fix FlowRuns view
+
 v1.1.1
 ----------
 * Deploy
