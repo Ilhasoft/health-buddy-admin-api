@@ -1,3 +1,7 @@
+v1.1.3
+----------
+* Add Monitoring
+
 v1.1.2
 ----------
 * Fix FlowRuns view
