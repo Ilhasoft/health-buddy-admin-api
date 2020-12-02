@@ -14,6 +14,7 @@ import os
 from datetime import timedelta
 
 from decouple import config
+from django.utils.log import DEFAULT_LOGGING
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -51,6 +52,7 @@ INSTALLED_APPS += [
     "drf_yasg",
     "django_rest_passwordreset",
     "storages",
+    "elasticapm.contrib.django",
 ]
 
 # system apps
@@ -64,6 +66,8 @@ INSTALLED_APPS += [
 ]
 
 MIDDLEWARE = [
+    "elasticapm.contrib.django.middleware.TracingMiddleware",
+    "elasticapm.contrib.django.middleware.Catch404Middleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -87,6 +91,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "elasticapm.contrib.django.context_processors.rum_tracing",
             ],
         },
     },
@@ -169,6 +174,18 @@ DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
     "OPTIONS": {"min_length": 10, "max_length": 10},
 }
 
+# Logging
+LOGGING = DEFAULT_LOGGING
+LOGGING["handlers"]["elasticapm"] = {
+    "level": "WARNING",
+    "class": "elasticapm.contrib.django.handlers.LoggingHandler",
+}
+LOGGING["loggers"]["elasticapm.errors"] = {
+    "level": "ERROR",
+    "handlers": ["console"],
+    "propagate": False,
+}
+
 # CORS
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -217,3 +234,22 @@ CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://localho
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
+
+# Elastic Observability APM
+ELASTIC_APM = {
+    "DISABLE_SEND": config("APM_DISABLE_SEND", default=False, cast=bool),
+    "DEBUG": config("APM_SERVICE_DEBUG", default=False, cast=bool),
+    "SERVICE_NAME": config("APM_SERVICE_NAME", default=""),
+    "SECRET_TOKEN": config("APM_SECRET_TOKEN", default=""),
+    "SERVER_URL": config("APM_SERVER_URL", default=""),
+    "ENVIRONMENT": config("APM_SERVICE_ENVIRONMENT", default="production"),
+    "DJANGO_TRANSACTION_NAME_FROM_ROUTE": True,
+    "PROCESSORS": (
+        "elasticapm.processors.sanitize_stacktrace_locals",
+        "elasticapm.processors.sanitize_http_request_cookies",
+        "elasticapm.processors.sanitize_http_headers",
+        "elasticapm.processors.sanitize_http_wsgi_env",
+        "elasticapm.processors.sanitize_http_request_querystring",
+        "elasticapm.processors.sanitize_http_request_body",
+    ),
+}
