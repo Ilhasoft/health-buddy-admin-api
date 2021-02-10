@@ -4,9 +4,16 @@ from rest_framework.response import Response
 from .request_formatter import FormatRequestGoogleAnalyticsAPI
 from .util import get_results_ga, get_results_mcf, get_results_realtime
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from healthbuddy_backend.utils.authentication import QueryParamsFixedTokenAuthentication, \
+    HeaderFixedTokenAuthentication
+
 
 class GAGoogleAnalyticsAPIView(ListAPIView):
     """Get the google analytics data (Google Analytics) from the registered account"""
+
+    authentication_classes = (HeaderFixedTokenAuthentication, JWTAuthentication)
 
     def get(self, request, *args, **kwargs):
         cleaner_request = FormatRequestGoogleAnalyticsAPI("ga", request)
