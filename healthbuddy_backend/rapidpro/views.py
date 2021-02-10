@@ -13,11 +13,17 @@ from .rapidpro import ProxyRapidPro
 from .serializers import FlowSerializer, MostAccessedFlowStatusSerializer, DailyFlowRunsSerializer, \
     DailyGroupCountSerializer, DailyChannelCountSerializer
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from healthbuddy_backend.utils.authentication import QueryParamsFixedTokenAuthentication, \
+    HeaderFixedTokenAuthentication
 
 class RapidProProxyView(ListAPIView):
     """
     Endpoint to transforms the current request into a RapidPro request
     """
+
+    authentication_classes = (HeaderFixedTokenAuthentication, JWTAuthentication)
 
     def get(self, request, *args, **kwargs):
         resource: str = kwargs.get("resource")
@@ -55,6 +61,9 @@ class FlowViewSet(viewsets.ModelViewSet):
 
 
 class RunsDataListView(APIView):
+
+    authentication_classes = (HeaderFixedTokenAuthentication, JWTAuthentication)
+
     def _get_filters(self, query_params={}):
         filters = {}
 
@@ -95,6 +104,9 @@ class RunsDataListView(APIView):
 
 
 class MostAccessedFlowStatus(APIView):
+
+    authentication_classes = (QueryParamsFixedTokenAuthentication, JWTAuthentication)
+
     def get(self, request, attribute):
         flows = Flow.objects.all().filter(is_active=True).annotate(
             active=Sum("runs__active"),
@@ -109,6 +121,9 @@ class MostAccessedFlowStatus(APIView):
 
 
 class DailyFlowRunsListView(ListAPIView):
+
+    authentication_classes = (HeaderFixedTokenAuthentication, JWTAuthentication)
+
     queryset = DailyFlowRuns.objects.all()
     model = DailyFlowRuns
     pagination_class = None
@@ -126,6 +141,9 @@ class DailyFlowRunsListView(ListAPIView):
 
 
 class DailyGroupCountListView(ListAPIView):
+
+    authentication_classes = (HeaderFixedTokenAuthentication, JWTAuthentication)
+
     queryset = DailyGroupCount.objects.all()
     model = DailyGroupCount
     pagination_class = None
