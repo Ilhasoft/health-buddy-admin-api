@@ -9,7 +9,7 @@ class QueryParamsFixedTokenAuthentication(BaseAuthentication):
     def authenticate(self, request):
 
         token = request.query_params.get("token")
-        if token != settings.FIXED_REST_TOKEN:
+        if token != settings.FIXED_ENDPOINT_TOKEN:
             raise exceptions.AuthenticationFailed("Invalid Token")
 
         return (AnonymousUser(), None)
@@ -27,7 +27,7 @@ class HeaderFixedTokenAuthentication(BaseAuthentication):
         return AnonymousUser(), header_token
 
     def is_valid_token(self, token: str) -> bool:
-        valid_token = f"Bearer {settings.FIXED_REST_TOKEN}"
+        valid_token = f"Bearer {settings.FIXED_ENDPOINT_TOKEN}"
 
         if token == valid_token:
             return True
