@@ -158,6 +158,7 @@ def sync_daily_channel_count():
             channel_daily = DailyChannelCount.objects.create(channel=channel, count=values, day=datetime_values)
 
 
+@task(name="sync-daily-label-count")
 def sync_daily_label_count():
     next_call = "https://rapidpro.ilhasoft.mobi/api/v2/labels.json"
     headers = {"Authorization": f"Token {settings.TOKEN_ORG_RAPIDPRO}"}
