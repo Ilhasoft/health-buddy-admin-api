@@ -47,3 +47,17 @@ class DailyChannelCount(models.Model):
     channel = models.ForeignKey(Channel, on_delete=models.PROTECT, related_name="counts")
     count = models.PositiveIntegerField(default=0)
     day = models.DateTimeField()
+
+
+class Label(models.Model):
+    uuid = models.CharField(max_length=255, primary_key=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.uuid} - {self.name}"
+
+
+class DailyLabelCount(models.Model):
+    label = models.ForeignKey(Label, on_delete=models.PROTECT, related_name="counts")
+    count = models.PositiveIntegerField(default=0)
+    day = models.DateTimeField(auto_now=True)

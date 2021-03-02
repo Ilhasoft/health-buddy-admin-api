@@ -4,7 +4,24 @@ from celery.task import task
 from django.conf import settings
 from django.utils import timezone
 
-from .models import Flow, DailyFlowRuns, Group, DailyGroupCount, DailyChannelCount, Channel
+from .models import (
+    Flow,
+    DailyFlowRuns,
+    Group,
+    DailyGroupCount,
+    DailyChannelCount,
+    Channel,
+    Label,
+    DailyLabelCount,
+)
+
+
+def get_all_results(next_call, headers, *args):
+    while next_call:
+        response = requests.get(next_call, headers=headers)
+        response_json = response.json()
+        next_call = response_json.get('next')
+        yield response_json.get('results', None)
 
 
 @task(name="sync-daily-flow-run")
@@ -139,3 +156,16 @@ def sync_daily_channel_count():
         for dates, values in dates_and_uuid.items():
             datetime_values = datetime.strptime(dates, "%Y-%m-%d")
             channel_daily = DailyChannelCount.objects.create(channel=channel, count=values, day=datetime_values)
+
+
+def sync_daily_label_count():
+    next_call = "https://rapidpro.ilhasoft.mobi/api/v2/labels.json"
+    headers = {"Authorization": f"Token {settings.TOKEN_ORG_RAPIDPRO}"}
+    results = get_all_results(next_call, headers)
+    for result in results:
+        for label_result in result:
+            label, created = Label.objects.get_or_create(
+                uuid=label_result.get("uuid"),
+                name=label_result.get("name")
+            )
+            DailyLabelCount.objects.create(label=label, count=label_result.get("count"))
