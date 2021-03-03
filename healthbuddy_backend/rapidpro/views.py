@@ -8,15 +8,22 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Flow, DailyFlowRuns, DailyGroupCount, DailyChannelCount
+from .models import Flow, DailyFlowRuns, DailyGroupCount, DailyChannelCount, DailyLabelCount
 from .rapidpro import ProxyRapidPro
-from .serializers import FlowSerializer, MostAccessedFlowStatusSerializer, DailyFlowRunsSerializer, \
-    DailyGroupCountSerializer, DailyChannelCountSerializer
+from .serializers import (
+    FlowSerializer,
+    MostAccessedFlowStatusSerializer,
+    DailyFlowRunsSerializer,
+    DailyGroupCountSerializer,
+    DailyChannelCountSerializer,
+    DailyLabelCountSerializer,
+)
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from healthbuddy_backend.utils.authentication import QueryParamsFixedTokenAuthentication, \
     HeaderFixedTokenAuthentication
+
 
 class RapidProProxyView(ListAPIView):
     """
@@ -168,6 +175,23 @@ class DailyChannelCountListView(ListAPIView):
     filterset_fields = ["channel__uuid", "channel__name", "day"]
     search_fields = ["channel__uuid", "channel__name", "day"]
     ordering_fields = ["channel__uuid", "channel__name", "day"]
+
+    def filter_queryset(self, queryset):
+        query_params = self.request.query_params
+        start_date = query_params.get("start_date", "2000-01-01")
+        end_date = query_params.get("end_date", "2100-01-01")
+        queryset = queryset.filter(day__range=[start_date, end_date])
+        return super().filter_queryset(queryset).order_by("day")
+
+
+class DailyLabelCountListView(ListAPIView):
+    queryset = DailyLabelCount.objects.all()
+    model = DailyLabelCount
+    pagination_class = None
+    serializer_class = DailyLabelCountSerializer
+    filterset_fields = ["label__uuid", "label__name", "day"]
+    search_fields = ["label__uuid", "label__name", "day"]
+    ordering_fields = ["label__uuid", "label__name", "day"]
 
     def filter_queryset(self, queryset):
         query_params = self.request.query_params

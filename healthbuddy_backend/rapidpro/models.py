@@ -60,4 +60,4 @@ class Label(models.Model):
 class DailyLabelCount(models.Model):
     label = models.ForeignKey(Label, on_delete=models.PROTECT, related_name="counts")
     count = models.PositiveIntegerField(default=0)
-    day = models.DateTimeField(auto_now=True)
+    day = models.DateField(auto_now=True)
