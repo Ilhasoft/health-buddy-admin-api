@@ -1,6 +1,7 @@
 import requests
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
+from django.utils.dateparse import parse_date
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView
@@ -115,7 +116,13 @@ class MostAccessedFlowStatus(APIView):
     authentication_classes = (QueryParamsFixedTokenAuthentication, JWTAuthentication)
 
     def get(self, request, attribute):
-        flows = Flow.objects.all().filter(is_active=True).annotate(
+        query_params = self.request.query_params
+        start_date = parse_date(query_params.get("start_date", "2000-01-01"))
+        end_date = parse_date(query_params.get("end_date", "2100-01-01"))
+        flows = Flow.objects.all().filter(
+            is_active=True,
+            runs__day__range=[start_date, end_date]
+        ).annotate(
             active=Sum("runs__active"),
             completed=Sum("runs__completed"),
             interrupted=Sum("runs__interrupted"),
