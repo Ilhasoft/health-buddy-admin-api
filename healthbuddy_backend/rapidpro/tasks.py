@@ -20,8 +20,8 @@ def get_all_results(next_call, headers):
     while next_call:
         response = requests.get(next_call, headers=headers)
         response_json = response.json()
-        next_call = response_json.get('next')
-        yield response_json.get('results', None)
+        next_call = response_json.get("next")
+        yield response_json.get("results", None)
 
 
 @task(name="sync-daily-flow-run")
