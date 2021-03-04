@@ -16,7 +16,7 @@ from .models import (
 )
 
 
-def get_all_results(next_call, headers, *args):
+def get_all_results(next_call, headers):
     while next_call:
         response = requests.get(next_call, headers=headers)
         response_json = response.json()
