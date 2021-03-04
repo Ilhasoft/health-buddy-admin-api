@@ -1,6 +1,10 @@
-v1.1.4
+v1.1.5
 ----------
 * Deploy
+
+v1.1.5
+----------
+* Add Labels synchronization
 
 v1.1.3
 ----------
