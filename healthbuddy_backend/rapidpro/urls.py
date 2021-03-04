@@ -1,7 +1,14 @@
 from django.urls import path
 
-from .views import RapidProProxyView, RunsDataListView, MostAccessedFlowStatus, DailyFlowRunsListView, \
-    DailyGroupCountListView, DailyChannelCountListView, DailyLabelCountListView
+from .views import (
+    RapidProProxyView,
+    RunsDataListView,
+    MostAccessedFlowStatus,
+    DailyFlowRunsListView,
+    DailyGroupCountListView,
+    DailyChannelCountListView,
+    DailyLabelCountListView,
+)
 
 urlpatterns = [
     path("proxy/<str:resource>", RapidProProxyView.as_view(), name="proxy_rapidpro"),

@@ -75,7 +75,7 @@ def sync_daily_flow_run():
             flow = Flow.objects.get(uuid=flow_uuid)
             for date, values in dates.items():
                 datetime_runs = datetime.strptime(date, "%Y-%m-%d")
-                bb = DailyFlowRuns.objects.create(
+                DailyFlowRuns.objects.create(
                     flow=flow,
                     day=datetime_runs,
                     active=values.get("active"),
@@ -105,7 +105,7 @@ def sync_daily_group_count():
             name = result.get("name")
             count = result.get("count")
             group, created = Group.objects.get_or_create(uuid=uuid, name=name)
-            daily_group_count = DailyGroupCount.objects.create(group=group, count=count, day=timezone.now())
+            DailyGroupCount.objects.create(group=group, count=count, day=timezone.now())
 
             rows_added += 1
 
@@ -155,7 +155,7 @@ def sync_daily_channel_count():
 
         for dates, values in dates_and_uuid.items():
             datetime_values = datetime.strptime(dates, "%Y-%m-%d")
-            channel_daily = DailyChannelCount.objects.create(channel=channel, count=values, day=datetime_values)
+            DailyChannelCount.objects.create(channel=channel, count=values, day=datetime_values)
 
 
 @task(name="sync-daily-label-count")

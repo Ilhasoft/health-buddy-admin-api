@@ -9,7 +9,13 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Flow, DailyFlowRuns, DailyGroupCount, DailyChannelCount, DailyLabelCount
+from .models import (
+    Flow,
+    DailyFlowRuns,
+    DailyGroupCount,
+    DailyChannelCount,
+    DailyLabelCount
+)
 from .rapidpro import ProxyRapidPro
 from .serializers import (
     FlowSerializer,
@@ -19,11 +25,11 @@ from .serializers import (
     DailyChannelCountSerializer,
     DailyLabelCountSerializer,
 )
-
+from healthbuddy_backend.utils.authentication import (
+    QueryParamsFixedTokenAuthentication,
+    HeaderFixedTokenAuthentication,
+)
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
-from healthbuddy_backend.utils.authentication import QueryParamsFixedTokenAuthentication, \
-    HeaderFixedTokenAuthentication
 
 
 class RapidProProxyView(ListAPIView):
