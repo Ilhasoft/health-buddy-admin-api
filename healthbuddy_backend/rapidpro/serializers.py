@@ -8,7 +8,6 @@ from .models import (
     Channel,
     DailyChannelCount,
     Label,
-    DailyLabelCount,
 )
 
 
@@ -68,15 +67,9 @@ class DailyChannelCountSerializer(serializers.ModelSerializer):
         fields = ["channel", "count", "day"]
 
 
-class LabelSerializer(serializers.ModelSerializer):
+class LabelCountSerializer(serializers.ModelSerializer):
+    msg_count = serializers.IntegerField()
+
     class Meta:
         model = Label
-        fields = ["uuid", "name"]
-
-
-class DailyLabelCountSerializer(serializers.ModelSerializer):
-    label = LabelSerializer()
-
-    class Meta:
-        model = DailyLabelCount
-        fields = ["label", "count", "day"]
+        fields = ["uuid", "name", "msg_count"]

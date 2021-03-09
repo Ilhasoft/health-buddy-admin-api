@@ -12,7 +12,7 @@ from .models import (
     DailyChannelCount,
     Channel,
     Label,
-    DailyLabelCount,
+    LabelMessage,
 )
 
 
@@ -159,14 +159,32 @@ def sync_daily_channel_count():
 
 
 @task(name="sync-daily-label-count")
-def sync_daily_label_count():
-    next_call = "https://rapidpro.ilhasoft.mobi/api/v2/labels.json"
+def sync_label_messages():
     headers = {"Authorization": f"Token {settings.TOKEN_ORG_RAPIDPRO}"}
-    results = get_all_results(next_call, headers)
+
+    # Get all rapidpro labels
+    labels_url = "https://rapidpro.ilhasoft.mobi/api/v2/labels.json"
+    results = get_all_results(labels_url, headers)
     for result in results:
         for label_result in result:
             label, created = Label.objects.get_or_create(
                 uuid=label_result.get("uuid"),
                 name=label_result.get("name")
             )
-            DailyLabelCount.objects.create(label=label, count=label_result.get("count"))
+
+            # Get all label messages
+            messages_url = f"https://rapidpro.ilhasoft.mobi/api/v2/messages.json?label={label.uuid}"
+
+            last_message = label.messages.last()
+            if last_message:
+                last_sync_date = last_message.day.strftime("%Y-%m-%d")
+                messages_url = f"{messages_url}&after={last_sync_date}"
+
+            results = get_all_results(messages_url, headers)
+            for result in results:
+                for message in result:
+                    label_message, created = LabelMessage.objects.get_or_create(
+                        id_msg_rp=message.get("id"),
+                        day=message.get("created_on")
+                    )
+                    label_message.labels.add(label)
