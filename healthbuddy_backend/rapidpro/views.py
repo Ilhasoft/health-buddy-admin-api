@@ -197,7 +197,7 @@ class DailyChannelCountListView(ListAPIView):
 
 
 class LabelMessageCountView(ListAPIView):
-    authentication_classes = (QueryParamsFixedTokenAuthentication, JWTAuthentication)
+    authentication_classes = (HeaderFixedTokenAuthentication, JWTAuthentication)
     queryset = Label.objects.all()
     pagination_class = None
     serializer_class = LabelCountSerializer
