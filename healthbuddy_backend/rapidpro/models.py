@@ -57,7 +57,7 @@ class Label(models.Model):
         return f"{self.uuid} - {self.name}"
 
 
-class DailyLabelCount(models.Model):
-    label = models.ForeignKey(Label, on_delete=models.PROTECT, related_name="counts")
-    count = models.PositiveIntegerField(default=0)
-    day = models.DateField(auto_now=True)
+class LabelMessage(models.Model):
+    labels = models.ManyToManyField(Label, related_name="messages")
+    id_msg_rp = models.IntegerField(unique=True)
+    day = models.DateTimeField()

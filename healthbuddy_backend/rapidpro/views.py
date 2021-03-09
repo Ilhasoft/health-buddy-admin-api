@@ -1,5 +1,5 @@
 import requests
-from django.db.models import Sum
+from django.db.models import Count, Sum, Q
 from django.db.models.functions import Coalesce
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -13,7 +13,7 @@ from .models import (
     DailyFlowRuns,
     DailyGroupCount,
     DailyChannelCount,
-    DailyLabelCount
+    Label,
 )
 from .rapidpro import ProxyRapidPro
 from .serializers import (
@@ -22,7 +22,7 @@ from .serializers import (
     DailyFlowRunsSerializer,
     DailyGroupCountSerializer,
     DailyChannelCountSerializer,
-    DailyLabelCountSerializer,
+    LabelCountSerializer,
 )
 from healthbuddy_backend.utils.authentication import (
     QueryParamsFixedTokenAuthentication,
@@ -196,18 +196,23 @@ class DailyChannelCountListView(ListAPIView):
         return super().filter_queryset(queryset).order_by("day")
 
 
-class DailyLabelCountListView(ListAPIView):
-    queryset = DailyLabelCount.objects.all()
-    model = DailyLabelCount
+class LabelMessageCountView(ListAPIView):
+    authentication_classes = (QueryParamsFixedTokenAuthentication, JWTAuthentication)
+    queryset = Label.objects.all()
     pagination_class = None
-    serializer_class = DailyLabelCountSerializer
-    filterset_fields = ["label__uuid", "label__name", "day"]
-    search_fields = ["label__uuid", "label__name", "day"]
-    ordering_fields = ["label__uuid", "label__name", "day"]
+    serializer_class = LabelCountSerializer
+    filterset_fields = ["uuid", "name"]
+    search_fields = ["uuid", "name"]
+    ordering_fields = ["uuid", "name"]
 
-    def filter_queryset(self, queryset):
+    def get_queryset(self):
         query_params = self.request.query_params
         start_date = query_params.get("start_date", "2000-01-01")
         end_date = query_params.get("end_date", "2100-01-01")
-        queryset = queryset.filter(day__range=[start_date, end_date])
-        return super().filter_queryset(queryset).order_by("day")
+
+        return self.queryset.annotate(
+            msg_count=Count(
+                "messages",
+                filter=Q(messages__day__range=[start_date, end_date])
+            )
+        ).order_by("-msg_count")
