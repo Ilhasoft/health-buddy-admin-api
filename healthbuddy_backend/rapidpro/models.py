@@ -59,5 +59,5 @@ class Label(models.Model):
 
 class LabelMessage(models.Model):
     labels = models.ManyToManyField(Label, related_name="messages")
-    id_msg_rp = models.IntegerField(unique=True)
+    id_msg_rp = models.IntegerField("Rapidpro message ID", unique=True)
     day = models.DateTimeField()
