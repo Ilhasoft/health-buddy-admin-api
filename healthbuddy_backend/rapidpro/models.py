@@ -47,3 +47,17 @@ class DailyChannelCount(models.Model):
     channel = models.ForeignKey(Channel, on_delete=models.PROTECT, related_name="counts")
     count = models.PositiveIntegerField(default=0)
     day = models.DateTimeField()
+
+
+class Label(models.Model):
+    uuid = models.CharField(max_length=255, primary_key=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.uuid} - {self.name}"
+
+
+class LabelMessage(models.Model):
+    labels = models.ManyToManyField(Label, related_name="messages")
+    id_msg_rp = models.IntegerField("Rapidpro message ID", unique=True)
+    day = models.DateTimeField()

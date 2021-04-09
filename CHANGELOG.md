@@ -1,3 +1,11 @@
+v1.1.6
+----------
+* Deploy
+
+v1.1.5
+----------
+* Add Labels synchronization
+
 v1.1.3
 ----------
 * Add Monitoring

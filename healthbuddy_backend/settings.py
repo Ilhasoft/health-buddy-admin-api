@@ -163,6 +163,8 @@ REST_FRAMEWORK = {
     ],
 }
 
+FIXED_ENDPOINT_TOKEN = config("FIXED_ENDPOINT_TOKEN", default="set your token")
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
 }
