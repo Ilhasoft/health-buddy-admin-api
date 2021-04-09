@@ -452,7 +452,7 @@
             ```json
             [
                 {
-                    "uuid": "8715f9df-858a-49de-878b-a431f0b42ce5",,
+                    "uuid": "8715f9df-858a-49de-878b-a431f0b42ce5",
                     "name": "Flow1",
                     "active": 0,
                     "completed": 5053,
