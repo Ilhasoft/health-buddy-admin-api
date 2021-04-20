@@ -1,3 +1,7 @@
+v1.1.7
+----------
+* Fix email language
+
 v1.1.6
 ----------
 * Deploy
