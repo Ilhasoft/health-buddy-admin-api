@@ -228,7 +228,7 @@ PRIVATE_FILE_STORAGE = "healthbuddy_backend.storage_backends.PrivateMediaStorage
 # GOOGLE API AUTH
 GOOGLE_API_KEY_FILENAME = config("GOOGLE_API_KEY_FILENAME", default="client_secrets.json")
 GOOGLE_API_KEY_FILE_PATH = os.path.join(BASE_DIR, GOOGLE_API_KEY_FILENAME)
-GOOGLE_API_PROFILE_ID = config("GOOGLE_API_PROFILE_ID")
+GOOGLE_API_PROFILE_ID = config("GOOGLE_API_PROFILE_ID", default="")
 
 # Celery
 CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="redis://localhost:6379")
