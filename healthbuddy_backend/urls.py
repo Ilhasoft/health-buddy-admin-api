@@ -15,6 +15,7 @@ from .users.views import UserViewSet
 from .articles.views import ArticleViewSet
 from .rapidpro.views import FlowViewSet
 from .videos.views import VideoViewSet
+from .polls.views import PollViewSet
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -33,6 +34,7 @@ router.register(r"articles", ArticleViewSet)
 router.register(r"fake-news", FakeNewsViewSet)
 router.register(r"videos", VideoViewSet)
 router.register(r"flows", FlowViewSet)
+router.register(r"polls", PollViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
