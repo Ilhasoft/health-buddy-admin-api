@@ -63,6 +63,7 @@ INSTALLED_APPS += [
     "healthbuddy_backend.fake_news",
     "healthbuddy_backend.videos",
     "healthbuddy_backend.rapidpro",
+    "healthbuddy_backend.polls",
 ]
 
 MIDDLEWARE = [
