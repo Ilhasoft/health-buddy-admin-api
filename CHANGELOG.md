@@ -1,3 +1,7 @@
+v1.1.8
+----------
+* Polls Feature
+
 v1.1.7
 ----------
 * Fix email language
