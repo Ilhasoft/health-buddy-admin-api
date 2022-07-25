@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime
+from datetime import datetime, time, timedelta
 from celery.task import task
 from django.conf import settings
 from django.utils import timezone
@@ -31,11 +31,13 @@ def sync_daily_flow_run():
 
     final_result = {}
 
-    last_item = DailyFlowRuns.objects.last()
+    last_item = DailyFlowRuns.objects.order_by('day').last()
     if last_item:
-        last_day = last_item.day
+        last_day = last_item.day + timedelta(days=1)
         last_day = last_day.strftime("%Y-%m-%d")
-        next_ = f"{next_}?after={last_day}"
+        yesterdayMaxTime = datetime.combine(datetime.now() - timedelta(days=1), time.max)
+        yesterdayMaxTime = yesterdayMaxTime.strftime("%Y-%m-%dT%H:%M:%S.%f")
+        next_ = f"{next_}?after={last_day}&before={yesterdayMaxTime}"
 
     while next_:
         response = requests.get(next_, headers=headers)
