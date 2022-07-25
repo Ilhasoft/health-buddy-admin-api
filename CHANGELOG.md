@@ -1,3 +1,7 @@
+v1.1.9
+----------
+* Fix sync-daily-flow-run duplicate data creation
+
 v1.1.8
 ----------
 * Polls Feature
