@@ -31,7 +31,7 @@ def sync_daily_flow_run():
 
     final_result = {}
 
-    last_item = DailyFlowRuns.objects.order_by('-day').first()
+    last_item = DailyFlowRuns.objects.order_by('day').last()
     if last_item:
         last_day = last_item.day
         last_day = last_day.strftime("%Y-%m-%d")
