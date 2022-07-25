@@ -13,7 +13,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'sync-daily-flow-run': {
         'task': 'sync-daily-flow-run',
-        'schedule': crontab(minute=00, hour=23)
+        'schedule': crontab(minute=00, hour=00)
     },
     'sync-daily-group-count': {
         'task': 'sync-daily-group-count',
